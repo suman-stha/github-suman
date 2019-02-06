@@ -6,3 +6,4 @@ from master:ssh-copy-id <private ip>
 to login to slave: ssh <private ip>
 hosts file: cd /etc/ansible/hosts
 
+https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/
