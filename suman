@@ -1,0 +1,8 @@
+uncomment the inventory on ansible.confg file.
+on master:visudo > add user  
+on all server:etc/ssh/sshd > passwordauthentication yes
+ansible all -m ping
+from master:ssh-copy-id <private ip>
+to login to slave: ssh <private ip>
+hosts file: cd /etc/ansible/hosts
+
