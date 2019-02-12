@@ -7,3 +7,89 @@ to login to slave: ssh <private ip>
 hosts file: cd /etc/ansible/hosts
 
 https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/
+uncomment the inventory on ansible.confg file.
+on master:visudo > add user  
+on all server:etc/ssh/sshd > passwordauthentication yes
+ansible all -m ping
+from master:ssh-copy-id <private ip>
+to login to slave: ssh <private ip>
+hosts file: cd /etc/ansible/hosts
+
+
+#To give color to user
+export PS1="/e[1;31m[\u@\h \w]\$ \e[m"
+#To install ansible
+1.install the rpm
+2.yum install -y ansible 
+
+
+#generate ssh key
+ssh-keygen
+#copy the ssh key  of server to the host machine 
+ssh-copy-id -i user@ip 
+then give the password of host machine user
+
+#To check the connection between sever and host machine
+ssh user@ip 
+It should redirect you to the terminal of the host machine.
+#To ping the hosts
+ansible -m ping webservers
+ansible -m ping <ip>
+#To see the uptime
+ansible -m command -a "uptime" webservers 
+ansible -m command -a "uptime " <ip>
+#To check all the modules
+ansible-doc -l
+#To check specific modules
+ansible-doc <module name>
+eg: ansible-doc ping
+    ansible-doc command
+
+#To create the user in the hosts machine
+ansible webservers -m user -a "name=john password=john" -s
+
+#to check the facts of the inventory 
+ansible webservers -m setup
+
+ansible webservers j-m setup -a "filter=ansible_user"
+
+
+
+
+cd /usr/lib/python2.7/site-packages/ansible/moudules/commands && ls
+
+#To check the id in host machine
+id john
+
+
+#To check the details of user module
+ansible-doc user
+
+#To check the package
+rpm -qa <package>
+eg: rpm -qa httpd
+#ad-hocs commands
+ansible webservers -m yum -a "name=httpd state=present" -s 
+#to check the status
+systemctl status https
+
+#To start the service
+ansible webservers -m service -a "name=httpd state=started" -s
+ ad-hoc commands are used to check the host machine immediately.
+
+#To remove the package
+ansible webservers -m yum -a "name=httpd state=absent" -s
+ 
+#To copy the file
+ansible webservers -m copy -a "src=/tmp/file.txt dest=/tmp/file.txt"
+
+#To install the git
+asible webservers -m yum -a "name=git state=present" -s 
+#To pull the code use git module
+ansible webservers -m git -a "repo=https://github.com/suman-stha/shell_script.git dest=/tmp/gitrepo version=HEAD" -s
+
+
+
+
+
+ 
