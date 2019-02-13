@@ -1,0 +1,56 @@
+1. To install nginx
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: Inatall nginx package
+    yum: name=nginx state=present
+
+2.To copy the script file and run that script file.
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name : Transfer the script file
+    copy: src=/tmp/test.sh dest=/tmp/
+  - name: Execute the script
+    command: sh /tmp/test.sh
+3.To install tomcat, start service, deploy sample war file
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: Install tomcat package
+    yum: name=tomcat state=latest
+  - name: Start the tomcat service
+    service: name=tomcat state=started
+  - name: Deploy sample.war 
+    copy: src=sample.war dest=/usr/share/tomcat/webapps
+    notify: restart tomcat
+  handlers:
+  - name: restart tomcat
+    service: name=tomcat state=restarted
+
+4.To install httpd package copy file to des and restart httpd 
+
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  vars:  
+   src_path: /etc/ansible
+   dest_path: /var/www/html
+  tasks: 
+  - name: Install httpd package
+    yum: name=httpd state=present
+  - name: Start httpd service
+    service: name=httpd state=started
+  - name: Deploy file
+    copy: src={{src_path}}/index.html dest={{dest_path}}
+    notify: restart httpd
+  handlers: 
+   - name: restart httpd    
+     service: name=httpd state=restarted 
