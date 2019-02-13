@@ -6,14 +6,8 @@ from master:ssh-copy-id <private ip>
 to login to slave: ssh <private ip>
 hosts file: cd /etc/ansible/hosts
 
+
 https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/
-uncomment the inventory on ansible.confg file.
-on master:visudo > add user  
-on all server:etc/ssh/sshd > passwordauthentication yes
-ansible all -m ping
-from master:ssh-copy-id <private ip>
-to login to slave: ssh <private ip>
-hosts file: cd /etc/ansible/hosts
 
 
 #To give color to user
@@ -25,6 +19,7 @@ export PS1="/e[1;31m[\u@\h \w]\$ \e[m"
 
 #generate ssh key
 ssh-keygen
+
 #copy the ssh key  of server to the host machine 
 ssh-copy-id -i user@ip 
 then give the password of host machine user
@@ -32,14 +27,18 @@ then give the password of host machine user
 #To check the connection between sever and host machine
 ssh user@ip 
 It should redirect you to the terminal of the host machine.
+
 #To ping the hosts
 ansible -m ping webservers
 ansible -m ping <ip>
+
 #To see the uptime
 ansible -m command -a "uptime" webservers 
 ansible -m command -a "uptime " <ip>
+
 #To check all the modules
 ansible-doc -l
+
 #To check specific modules
 ansible-doc <module name>
 eg: ansible-doc ping
@@ -68,8 +67,10 @@ ansible-doc user
 #To check the package
 rpm -qa <package>
 eg: rpm -qa httpd
+
 #ad-hocs commands
 ansible webservers -m yum -a "name=httpd state=present" -s 
+
 #to check the status
 systemctl status https
 
@@ -85,9 +86,76 @@ ansible webservers -m copy -a "src=/tmp/file.txt dest=/tmp/file.txt"
 
 #To install the git
 asible webservers -m yum -a "name=git state=present" -s 
+
 #To pull the code use git module
 ansible webservers -m git -a "repo=https://github.com/suman-stha/shell_script.git dest=/tmp/gitrepo version=HEAD" -s
 
+
+
+#To see the list of hosts
+ansible --list-hosts webservers
+
+#To check the syntax of the playbook
+ansible-playbook playbook1.yml --syntax-check
+
+#To run the playbook
+ansible-playbook playbook1.yml
+
+#To remove the package
+yum remove git(Package name)
+
+#ansible roles
+cd /etc/ansible
+cd roles
+sudo mkdir tomcat
+sudo mkdir files handlers meta tasks vars
+
+#meta is nothing but der
+all the task goes to task directory
+
+#To download the jenkins roles
+First go to the roles directory and then execute the following command
+sudo ansible-galaxy install --roles-path /etc/ansible/roles geerlingguy
+
+#sudo ansible-galaxy init demorole
+
+#To execute the roles , add the role in main playbook yml file.
+---
+-hosts: webservers
+ become: true
+ become_true: root
+ vars: jenkins_http_port: 9090
+ roles:
+ - tomcat
+ - apache
+ - geerlingguy.java
+ - gerlingguy.jenkins
+
+#ansible commands
+ansible -m command -a "uptime" webservers
+ansible -m command -a "uname -a " webservers
+ansible -m ping webservers
+ansible -m command -a "hostname" webservers
+
+#ansible inventory files
+[webservers]
+localhost ansible_connection=local
+web1.example.com
+web2.example.com: 1234 ansible_commention=ssh ansible_user=ftaylor
+[db-servers]
+web1.example.com
+db1.example.com
+
+#Simplifying host inventories with ranges
+192.168.[4:7].[0:255] -all IP addresses in the 192.168.4.0/22 network (192.168.4.0 through)
+(192.168.7.255).
+
+server[01:20].example.com -all hosts named server01.example through server20.example.com
+
+
+
+
+ 
 
 
 
