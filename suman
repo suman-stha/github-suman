@@ -2,7 +2,7 @@ uncomment the inventory on ansible.confg file.
 on master:visudo > add user  
 on all server:etc/ssh/sshd > passwordauthentication yes
 ansible all -m ping
-from master:ssh-copy-id <private ip>
+from master:ssh-copy-id -i <private ip>
 to login to slave: ssh <private ip>
 hosts file: cd /etc/ansible/hosts
 
@@ -18,7 +18,7 @@ export PS1="/e[1;31m[\u@\h \w]\$ \e[m"
 
 
 #generate ssh key
-ssh-keygen
+ssh-keygen	
 
 #copy the ssh key  of server to the host machine 
 ssh-copy-id -i user@ip 
@@ -27,6 +27,9 @@ then give the password of host machine user
 #To check the connection between sever and host machine
 ssh user@ip 
 It should redirect you to the terminal of the host machine.
+
+#To connect the host machine by hostname 
+add ip and  hostname in same line  /etc/hosts file
 
 #To ping the hosts
 ansible -m ping webservers
@@ -152,12 +155,59 @@ db1.example.com
 
 server[01:20].example.com -all hosts named server01.example through server20.example.com
 
+#To check the uptime
+ansible -m command -a "uptime" webservers
 
+#To change the permision of file which is in hosts servers
+ansible -m file -a "dest=/tmp/test.sh mode=777 owner=root group=root" webservers --become -become-method=sudo --become-user=root -K
 
+#To check the OS
+cat /etc/redhat-release
+ansible -m command -a "cat /etc/redhat-release" webservers
+cat /etc/os-release
 
+#Hostname
+vi /etc/sysconfig/network
+hostname client3.example.com
+su -root
+
+#To check the ip of the hosts machines
+ansible webservers -m command -a /usr/bin/hostname
  
+#To check the os version
+ansible -m command -a "uname -r" webservers
+
+#To copy the hosts file to the hosts machine
+ansible -m copy -a "src=/etc/hosts dest=/tmp/hosts" webservers --become -K
+ansible -m copy -a "src=/tmp/practise dest=/tmp/practise" --become -K se
+
+#
+
+#To add the content on file on hosts machine
+ansible -m copy -a 'content="Managed by ansible\n" dest=/tmp/practise' webservers --become -K
+
+
+
+#To copy between servers
+scp -p l.sh intelycorellc@192.168.1.21:/Users/intelycorellc
+
+sftp intelycorellc@192.168.1.21
+get suman.txt
+put examples.desktop
+
+
+#The modules directory
+cd /usr/lib/python2.7/site-packages/ansible/modules
+
+#To install tree package
+ansible webservers -m yum -a "name=tree state=present" --become -K
+#To check the tree package
+rpm -qa |grep -i tree
+
+ansible -m yum -a "name=httpd state=present" webservers -s
+ansible -m service -a "name=htpd state=started" webservers -s
 
 
 
 
- 
+
