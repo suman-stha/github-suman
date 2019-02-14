@@ -54,3 +54,20 @@
   handlers: 
    - name: restart httpd    
      service: name=httpd state=restarted 
+     
+     
+     
+ # Playbook to copy the files with conditions
+ ---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: copy the file
+    copy:
+     src: /tmp/abcd1
+     dest: /tmp
+     owner: unixadm
+     group: root
+     mode: 0777    
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == '7'
