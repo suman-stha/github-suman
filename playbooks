@@ -217,3 +217,32 @@ steps for the installation of Apache Web Server
     state: latest
     with_items: "{{ansible_mounts}}"
     when: item.mount == "/" and item.size_available > 300000000
+
+# loop in ansible
+- yum: 
+   name: "{{item}}"
+   state: latest
+  with_items: 
+  - postfix
+  - dovecot
+   
+
+#
+vars:
+ mail_services:
+ - postfix
+ - dovecot
+
+tasks:
+ - yum:
+   name: "{{item}}"
+   state: latest
+  with_items: "{{mail_services}}"
+
+
+- user:
+  name: "{{item.name}}"
+  state: present
+  groups: "{{item.groupd}}"
+ with_items:
+ - {name: 'jane', groups: 'wheel'}
