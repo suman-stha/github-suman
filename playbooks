@@ -151,3 +151,61 @@
       name: firewalld
       enable: true
       state: started
+
+
+#To install the apache web server
+---
+steps for the installation of Apache Web Server
+1. Install latest package of httpd
+2.Start & enable the httpd service
+3. Install latest package for firewalld
+4. Start and enable firewalld service
+5.Permit http service at firewall
+6. Create simple html web page
+7. Defining web server name i.e. www.client1.example.com
+8. Update its entry in n/etc/hosts file
+
+#playbook
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: Install latest package of httpd
+    yum:
+      name: httpd
+      state: latest
+  - name: Start and enable the http service
+    service: 
+      name: httpd
+      enabled: true
+      start: started
+  - name: Install latest package of firewalld
+    yum:
+      name: firewalld
+      state: latest
+  - name: Start & Enable the firewalld service
+    service:
+       name: firewalld
+       enabled: true
+       state: started
+  - name: Permit http service
+    firewalld: 
+       service: http
+       permanent: true
+       state: enabled
+       immediate: yes
+  - name: Create simple html web page
+    copy: 
+      content: "Welcome to the Ansible learning course module\n"
+      dest: /var/www/html/index.html
+
+  - name: Defining Web Server Name
+    lineinfile: 
+      path: /etc/httpd/conf/httpd.conf
+      line: ServerName 192.169.1.20:80
+      insertafter: "#ServerName"
+  - name: Update its entry in /etc/hosts
+    lineinfile:
+       path: /etc/hosts
+       line:  10.142.0.2 10.142.0.3
