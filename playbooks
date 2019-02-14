@@ -209,3 +209,11 @@ steps for the installation of Apache Web Server
     lineinfile:
        path: /etc/hosts
        line:  10.142.0.2 10.142.0.3
+       
+    #install maridb when the memory is more than 300MB   
+       - name: install mariadb-server if enough space on root i.e. more than 300MB
+  yum: 
+    name: mariadb-server
+    state: latest
+    with_items: "{{ansible_mounts}}"
+    when: item.mount == "/" and item.size_available > 300000000
