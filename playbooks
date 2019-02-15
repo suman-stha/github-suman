@@ -272,10 +272,12 @@ tasks:
   become_method: sudo 
   tasks: 
   - name: Stopping the Control  M app1 (ctm_stop.sh)
-    shell: /opt/aptm/ctm_stop.sh > /tmp/out2 2>&1
+    shell: /opt/aptm/ctm_stop.sh > /tmp/out2 2>&1; cat /tmp/out2 |grep -iw 'failed' > /dev/null; if [ $? == 0 ]; then echo 'Applstopfailed'; else echo 'Applstopped'; fi
     register: appr_check
   - debug: msg="CTM App1 stopped successfully"
-    when: appr_check.rc == 0
+    when: appr_check.stdout == "Applstopped"
+  - debug: msg="CTM App1 stop has been failed"
+    when: appr.check.stdout == "Applstopfailed"
   - name: Log Message for Control M App1
     command: cat /tmp/out2
     register: logmsg
