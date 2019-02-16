@@ -7,6 +7,9 @@ to login to slave: ssh <private ip>
 hosts file: cd /etc/ansible/hosts
 
 
+# ansible download link
+https://linoxide.com/monitoring-2/install-splunk-centos-7/
+
 https://ansible-tips-and-tricks.readthedocs.io/en/latest/ansible/commands/
 
 
