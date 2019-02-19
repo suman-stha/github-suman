@@ -210,6 +210,9 @@ rpm -qa |grep -i tree
 ansible -m yum -a "name=httpd state=present" webservers -s
 ansible -m service -a "name=htpd state=started" webservers -s
 
+#ansible playbooks to create ec2 instances: 
+https://www.infinitypp.com/ansible/create-aws-resources-using-ansible/
+
 
 
 
