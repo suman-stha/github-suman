@@ -215,5 +215,6 @@ https://www.infinitypp.com/ansible/create-aws-resources-using-ansible/
 
 
 
-
+#To install ansible roles form ansible galaxy
+sudo ansible-galaxy install --roles-path /etc/ansible/roles temelio.collectd(roles name)
 
