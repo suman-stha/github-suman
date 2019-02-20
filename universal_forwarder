@@ -1,0 +1,27 @@
+Create playbook install_splunk_fwdr.yml with following:
+
+ ---
+ - name: Install software
+   hosts: mygroup
+   gather_facts: false
+   tasks:
+     - name: Install Splunk Forwarder
+       win_chocolatey:
+         name: splunk-universalforwarder
+         state: present
+Make sure in your inventory file the following is configured:
+
+ [mygroup]
+ 192.168.0.1
+ 192.168.0.2
+ 192.168.0.3
+ 192.168.0.4
+ [mygroup:vars]
+ ansible_user=<USERNAME>
+ ansible_password=<PASSWORD>
+ ansible_port=5986
+ ansible_connection=winrm
+ ansible_winrm_server_cert_validation=ignore
+Run playbook
+
+ ansible-playbook install_splunk_fwdr.yml
