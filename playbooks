@@ -282,3 +282,15 @@ tasks:
     command: cat /tmp/out2
     register: logmsg
   - debug: msg="{{ logmsg.stdout_lines }}"
+
+
+
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: Install collectd package
+    yum: name=collectd state=latest
+  - name: Start the collectd service
+    service: name=collectd state=started
